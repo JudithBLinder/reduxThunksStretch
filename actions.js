@@ -6,14 +6,18 @@ const { GOT_DESSERTS_DATA, NEW_DESSERT_DATA } = require('./types');
 const gotDesserts = (obj) => ({ type: GOT_DESSERTS_DATA, desserts: obj });
 const addDessert = (obj) => ({ type: NEW_DESSERT_DATA, newDessert: obj });
 const fetchDesserts = () => {
-  const desserts = axios.get('/api/desserts');
-  return function (dispatch) {
-    dispatch(gotDesserts(desserts.data));
+  return (dispatch) => {
+    return axios
+      .get('/api/desserts')
+      .then((res) => res.data)
+      .then(({ desserts }) => dispatch(gotDesserts(desserts)));
   };
 };
 const postDessert = () => {
-  return function (dispatch) {
-    dispatch(addDessert());
+  return (dispatch) => {
+    return axios
+      .post('/api/desserts', { newDessert: ['cream puff'] })
+      .then(() => dispatch(addDessert(['cream puff'])));
   };
 };
 module.exports = { gotDesserts, addDessert, fetchDesserts, postDessert };
